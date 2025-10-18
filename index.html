@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Perkembangan Wilayah & Revolusi Industri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Global & Reset */
+        :root {
+            --primary-color: #007bff; /* Biru edukatif */
+            --primary-light: #e6f2ff;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-body: #f7f9fc; /* Putih lembut */
+            --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.12);
+            --radius-default: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container Utama */
+        .quiz-container {
+            width: 100%;
+            max-width: 800px;
+            background: #fff;
+            border-radius: var(--radius-default);
+            box-shadow: var(--shadow-soft);
+            padding: 30px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: var(--text-light);
+            font-size: 0.9em;
+        }
+
+        /* Komponen Input Nama */
+        #name-input-section {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        #name-input-section input[type="text"] {
+            width: 80%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        #name-input-section input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        /* Card Soal */
+        .question-card {
+            background-color: #fff;
+            border-radius: var(--radius-default);
+            padding: 25px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .question-card h3 {
+            font-size: 1.15em;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        /* Opsi Jawaban */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: block;
+            padding: 12px 15px;
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+            position: relative;
+            user-select: none;
+        }
+
+        .option-label:hover {
+            background-color: #d8ecff;
+        }
+
+        .option-label input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Style untuk opsi yang dipilih */
+        .option-label input:checked + .option-text {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .option-label input:checked ~ .option-marker {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        .option-text {
+            padding-left: 35px; /* Sesuaikan dengan marker */
+            display: block;
+            color: var(--text-dark);
+        }
+
+        .option-marker {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7em;
+            font-weight: 600;
+            color: var(--primary-color);
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        /* Navigasi */
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        /* Tombol */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s, opacity 0.2s;
+            flex-grow: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: var(--text-dark);
+            border: 1px solid #ddd;
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn:not(:disabled):hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Indikator Soal */
+        .question-indicator {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1em;
+        }
+
+        /* Halaman Hasil */
+        #results-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        #results-section h2 {
+            color: var(--primary-color);
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        #final-score {
+            font-size: 3em;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        #motivation-message {
+            font-style: italic;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        /* Halaman Kuis Selesai (sudah dikerjakan) */
+        #completed-quiz-message {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        #completed-quiz-message h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        /* Tombol Download (Mode Guru) */
+        #download-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
+        }
+
+        /* Responsif */
+        @media (max-width: 600px) {
+            .quiz-container {
+                padding: 20px;
+            }
+
+            .nav-controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <header>
+            <h1>Kuis Online</h1>
+            <p>Perkembangan wilayah, Revolusi industri dan pengaruhnya</p>
+        </header>
+
+        <div id="completed-quiz-message" style="display:none;">
+            <h2>Kuis Selesai</h2>
+            <p>Kamu sudah menyelesaikan kuis ini. Terima kasih! 🙏</p>
+            <p id="info-score-completed" style="margin-top: 15px; font-weight: 600;"></p>
+            
+            <div id="download-section" style="display:none;">
+                <h3>Mode Guru</h3>
+                <button id="download-results-btn" class="btn btn-primary">
+                    <span id="download-count">0</span> Hasil Kuis Siap Diunduh (CSV)
+                </button>
+            </div>
+        </div>
+
+        <div id="name-input-section">
+            <p style="margin-bottom: 10px;">Masukkan nama Anda untuk memulai kuis:</p>
+            <input type="text" id="student-name" placeholder="Nama Lengkap" required>
+            <button id="start-quiz-btn" class="btn btn-primary" disabled>Mulai Kuis</button>
+        </div>
+
+        <div id="quiz-section" style="display:none;">
+            <div class="question-indicator">
+                Soal <span id="current-q-num">1</span> dari <span id="total-q-num">20</span>
+            </div>
+
+            <div id="question-area">
+                </div>
+
+            <div class="nav-controls">
+                <button id="prev-btn" class="btn btn-secondary" disabled>← Sebelumnya</button>
+                <button id="next-btn" class="btn btn-primary">Selanjutnya →</button>
+            </div>
+        </div>
+
+        <div id="results-section" style="display:none;">
+            <h2>Hasil Kuis Anda</h2>
+            <span id="final-score"></span>
+            <p id="motivation-message"></p>
+            <button id="reset-btn" class="btn btn-secondary" style="display:none;">Ulangi Kuis (Admin)</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Data Soal Kuis
+        // 20 soal bertema Perkembangan Wilayah, Revolusi industri, dan Pengaruhnya.
+        const quizData = [
+            {
+                question: "Peningkatan pesat produksi barang yang dimulai pada akhir abad ke-18 di Inggris disebut sebagai...",
+                options: ["Renaisans", "Reformasi", "Revolusi Industri", "Era Kolonialisme", "Masa Pencerahan"],
+                answer: "Revolusi Industri"
+            },
+            {
+                question: "Mesin uap yang menjadi simbol utama Revolusi Industri Pertama disempurnakan oleh...",
+                options: ["Isaac Newton", "Thomas Edison", "James Watt", "Henry Ford", "Galileo Galilei"],
+                answer: "James Watt"
+            },
+            {
+                question: "Apa dampak utama Revolusi Industri terhadap perkembangan kota dan wilayah?",
+                options: ["Penurunan populasi kota", "Meningkatnya spesialisasi pertanian", "Urbanisasi besar-besaran", "Pengurangan polusi udara", "Peningkatan kehidupan pedesaan"],
+                answer: "Urbanisasi besar-besaran"
+            },
+            {
+                question: "Revolusi Industri Kedua ditandai oleh penemuan dan penggunaan energi...",
+                options: ["Air dan Angin", "Batu Bara dan Uap", "Minyak Bumi dan Listrik", "Nuklir dan Panas Bumi", "Kayu dan Tenaga Hewan"],
+                answer: "Minyak Bumi dan Listrik"
+            },
+            {
+                question: "Konsep pembangunan yang memenuhi kebutuhan saat ini tanpa mengorbankan kemampuan generasi mendatang untuk memenuhi kebutuhan mereka sendiri adalah definisi dari...",
+                options: ["Pembangunan Kuantitatif", "Pembangunan Berkelanjutan", "Pembangunan Eksklusif", "Pembangunan Spasial", "Pembangunan Intensif"],
+                answer: "Pembangunan Berkelanjutan"
+            },
+            {
+                question: "Salah satu dampak negatif dari pesatnya industrialisasi di wilayah perkotaan adalah masalah...",
+                options: ["Peningkatan kualitas udara", "Keseimbangan ekosistem", "Kesenjangan sosial dan lingkungan kumuh", "Penyebaran kawasan hijau", "Pemerataan pendapatan"],
+                answer: "Kesenjangan sosial dan lingkungan kumuh"
+            },
+            {
+                question: "Model revolusi industri yang mengintegrasikan teknologi informasi dan komunikasi ke dalam sistem produksi fisik (IoT, AI) disebut...",
+                options: ["Industri 1.0", "Industri 2.0", "Industri 3.0", "Industri 4.0", "Industri 5.0"],
+                answer: "Industri 4.0"
+            },
+            {
+                question: "Perubahan penggunaan lahan dari pertanian menjadi kawasan industri dan perumahan di pinggiran kota disebut...",
+                options: ["Rehabilitasi", "Suburbanisasi", "Redevelopment", "Degradasi", "Gentrifikasi"],
+                answer: "Suburbanisasi"
+            },
+            {
+                question: "Berikut ini adalah karakteristik utama Revolusi Industri Pertama, kecuali...",
+                options: ["Tenaga uap", "Mekanisasi produksi", "Penggunaan batu bara", "Penciptaan jalur perakitan (assembly line)", "Industri tekstil"],
+                answer: "Penciptaan jalur perakitan (assembly line)"
+            },
+            {
+                question: "Bagaimana Revolusi Industri mempengaruhi pola migrasi global?",
+                options: ["Mendorong migrasi dari kota ke desa", "Memicu migrasi besar-besaran ke pusat industri", "Menyebabkan stagnasi migrasi", "Hanya mempengaruhi migrasi domestik", "Meningkatkan migrasi antar benua saja"],
+                answer: "Memicu migrasi besar-besaran ke pusat industri"
+            },
+            {
+                question: "Tujuan utama dari kebijakan penataan ruang wilayah adalah untuk mencapai...",
+                options: ["Dominasi ekonomi", "Keseimbangan dan keserasian pembangunan", "Peningkatan jumlah penduduk", "Pemusatan semua kegiatan di satu titik", "Pembangunan sektor agraris saja"],
+                answer: "Keseimbangan dan keserasian pembangunan"
+            },
+            {
+                question: "Salah satu indikator kesejahteraan suatu wilayah yang paling sering digunakan adalah...",
+                options: ["Indeks Demokrasi", "Produk Domestik Bruto (PDB) per Kapita", "Tingkat Curah Hujan", "Jumlah Pohon", "Luas Wilayah Administrasi"],
+                answer: "Produk Domestik Bruto (PDB) per Kapita"
+            },
+            {
+                question: "Penemuan yang memicu Revolusi Industri Ketiga (Digital) adalah...",
+                options: ["Mesin Cetak", "Telepon Genggam", "Komputer dan Internet", "Kapal Uap", "Mobil"],
+                answer: "Komputer dan Internet"
+            },
+            {
+                question: "Apa yang dimaksud dengan 'Degradasi Lingkungan' akibat perkembangan industri?",
+                options: ["Peningkatan kualitas udara dan air", "Penyusutan lahan pertanian", "Penurunan kualitas atau daya dukung lingkungan", "Pengembangan teknologi hijau", "Pembangunan infrastruktur baru"],
+                answer: "Penurunan kualitas atau daya dukung lingkungan"
+            },
+            {
+                question: "Pusat-pusat pertumbuhan baru yang muncul di negara berkembang seringkali dipicu oleh investasi di sektor...",
+                options: ["Seni dan Budaya", "Infrastruktur dan Industri Manufaktur", "Pariwisata Tradisional", "Edukasi Dasar", "Pertanian Subsisten"],
+                answer: "Infrastruktur dan Industri Manufaktur"
+            },
+            {
+                question: "Konsep 'Smart City' adalah salah satu wujud penerapan teknologi dari era...",
+                options: ["Industri 1.0", "Industri 2.0", "Industri 3.0", "Industri 4.0", "Masa Pra-industri"],
+                answer: "Industri 4.0"
+            },
+            {
+                question: "Faktor utama yang menyebabkan terjadinya perkembangan wilayah yang tidak merata adalah...",
+                options: ["Keseragaman sumber daya alam", "Perbedaan akses terhadap modal dan infrastruktur", "Kesamaan budaya lokal", "Jumlah penduduk yang merata", "Adanya kebijakan desentralisasi yang seragam"],
+                answer: "Perbedaan akses terhadap modal dan infrastruktur"
+            },
+            {
+                question: "Salah satu tantangan terbesar Revolusi Industri 4.0 terhadap kesejahteraan tenaga kerja adalah...",
+                options: ["Kebutuhan tenaga kerja manual meningkat", "Peningkatan jam kerja harian", "Otomatisasi yang berpotensi menggantikan pekerjaan manusia", "Biaya produksi yang sangat tinggi", "Stagnasi inovasi teknologi"],
+                answer: "Otomatisasi yang berpotensi menggantikan pekerjaan manusia"
+            },
+            {
+                question: "Apa yang merupakan dampak positif dari Revolusi Industri terhadap kesejahteraan secara umum?",
+                options: ["Penyebaran penyakit menular", "Penurunan rata-rata umur", "Kenaikan dramatis kemiskinan", "Peningkatan ketersediaan barang dan layanan, menurunkan harga", "Penurunan tingkat literasi"],
+                answer: "Peningkatan ketersediaan barang dan layanan, menurunkan harga"
+            },
+            {
+                question: "Pembagian wilayah menjadi kawasan 'Pusat' (Core) dan 'Pinggiran' (Periphery) adalah bagian dari Teori...",
+                options: ["Lokasi Industri Weber", "Tempat Sentral Christaller", "Polarisasi Ekonomi", "Hirarki Kebutuhan Maslow", "Teori Sektor Homer Hoyt"],
+                answer: "Polarisasi Ekonomi"
+            }
+        ];
+
+        // Variabel Global
+        let currentQuestionIndex = 0;
+        let studentAnswers = new Array(quizData.length).fill(null);
+        let studentName = '';
+        let quizStartTime = null;
+
+        // Kunci localStorage
+        const STORAGE_KEY_RESULTS = 'quizResults';
+        const STORAGE_KEY_STATUS = 'quizStatus';
+
+        // Elemen DOM
+        const quizSection = document.getElementById('quiz-section');
+        const nameInputSection = document.getElementById('name-input-section');
+        const completedMessageSection = document.getElementById('completed-quiz-message');
+        const resultsSection = document.getElementById('results-section');
+        const questionArea = document.getElementById('question-area');
+        const currentQNum = document.getElementById('current-q-num');
+        const totalQNum = document.getElementById('total-q-num');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const studentNameInput = document.getElementById('student-name');
+        const downloadResultsBtn = document.getElementById('download-results-btn');
+        const downloadSection = document.getElementById('download-section');
+
+        // --- Fungsi Utama ---
+
+        /**
+         * Memuat data hasil kuis dari Local Storage.
+         * @returns {Array} Array berisi hasil kuis yang sudah tersimpan.
+         */
+        function loadResults() {
+            const resultsJson = localStorage.getItem(STORAGE_KEY_RESULTS);
+            return resultsJson ? JSON.parse(resultsJson) : [];
+        }
+
+        /**
+         * Menyimpan status kuis pengguna saat ini ke Local Storage.
+         * Digunakan untuk memastikan kuis hanya dikerjakan sekali.
+         */
+        function saveQuizStatus(status, name = studentName, score = 0, time = 0, date = '') {
+            const data = {
+                status: status, // 'pending', 'completed'
+                name: name,
+                score: score,
+                time: time,
+                date: date
+            };
+            localStorage.setItem(STORAGE_KEY_STATUS, JSON.stringify(data));
+        }
+
+        /**
+         * Memeriksa status pengerjaan kuis dari Local Storage.
+         * @returns {Object} Objek status kuis.
+         */
+        function checkQuizStatus() {
+            const statusJson = localStorage.getItem(STORAGE_KEY_STATUS);
+            return statusJson ? JSON.parse(statusJson) : { status: 'pending', name: '', score: 0 };
+        }
+
+        /**
+         * Memulai kuis, menyembunyikan input nama, dan menampilkan soal pertama.
+         */
+        function startQuiz() {
+            studentName = studentNameInput.value.trim();
+            if (!studentName) return;
+
+            // Reset dan simpan status
+            currentQuestionIndex = 0;
+            studentAnswers.fill(null);
+            quizStartTime = new Date();
+            saveQuizStatus('pending');
+
+            // Tampilkan UI Kuis
+            nameInputSection.style.display = 'none';
+            quizSection.style.display = 'block';
+            resultsSection.style.display = 'none';
+            completedMessageSection.style.display = 'none';
+
+            totalQNum.textContent = quizData.length;
+            renderQuestion(currentQuestionIndex);
+            updateNavButtons();
+        }
+
+        /**
+         * Menampilkan soal kuis pada indeks tertentu.
+         * @param {number} index - Indeks soal yang akan ditampilkan.
+         */
+        function renderQuestion(index) {
+            const q = quizData[index];
+            currentQNum.textContent = index + 1;
+
+            // Buat HTML untuk soal
+            let optionsHtml = q.options.map((option, i) => {
+                const marker = String.fromCharCode(65 + i); // A, B, C, D, E
+                const isChecked = studentAnswers[index] === option;
+                return `
+                    <label class="option-label">
+                        <input type="radio" name="q${index}" value="${option}" ${isChecked ? 'checked' : ''} onchange="selectAnswer(${index}, '${option}')">
+                        <span class="option-marker">${marker}</span>
+                        <span class="option-text">${option}</span>
+                    </label>
+                `;
+            }).join('');
+
+            // Terapkan animasi transisi (minimalis)
+            questionArea.style.opacity = 0;
+            setTimeout(() => {
+                questionArea.innerHTML = `
+                    <div class="question-card">
+                        <h3>${index + 1}. ${q.question}</h3>
+                        <div class="options-group">
+                            ${optionsHtml}
+                        </div>
+                    </div>
+                `;
+                questionArea.style.opacity = 1;
+            }, 100); // Waktu tunda untuk animasi fade
+
+            updateNavButtons();
+        }
+
+        /**
+         * Menyimpan jawaban yang dipilih oleh pengguna.
+         * @param {number} qIndex - Indeks soal.
+         * @param {string} answer - Jawaban yang dipilih.
+         */
+        function selectAnswer(qIndex, answer) {
+            studentAnswers[qIndex] = answer;
+            // Di sini kita bisa menambahkan logika untuk menonaktifkan opsi agar tidak bisa diganti,
+            // tetapi karena ada tombol 'Sebelumnya', biarkan opsi tetap bisa diubah
+        }
+
+        /**
+         * Memperbarui status tombol navigasi (Sebelumnya, Selanjutnya/Kirim).
+         */
+        function updateNavButtons() {
+            // Tombol Sebelumnya
+            prevBtn.disabled = currentQuestionIndex === 0;
+
+            // Tombol Selanjutnya
+            if (currentQuestionIndex < quizData.length - 1) {
+                nextBtn.textContent = 'Selanjutnya →';
+                nextBtn.onclick = () => {
+                    // Cek apakah soal saat ini sudah dijawab sebelum pindah (opsional, tapi disarankan)
+                    if (studentAnswers[currentQuestionIndex] === null) {
+                        alert("Mohon jawab soal ini sebelum melanjutkan.");
+                        return;
+                    }
+                    currentQuestionIndex++;
+                    renderQuestion(currentQuestionIndex);
+                };
+            } else {
+                nextBtn.textContent = 'Kirim Jawaban';
+                nextBtn.onclick = submitQuiz;
+                // Aktifkan Kirim jika sudah di soal terakhir DAN sudah dijawab
+                nextBtn.disabled = studentAnswers[currentQuestionIndex] === null;
+            }
+        }
+
+        /**
+         * Menghitung dan menampilkan hasil kuis.
+         */
+        function submitQuiz() {
+            // Pastikan soal terakhir sudah dijawab
+            if (studentAnswers[quizData.length - 1] === null) {
+                alert("Mohon jawab soal terakhir sebelum mengirim.");
+                return;
+            }
+
+            let score = 0;
+            quizData.forEach((q, index) => {
+                if (studentAnswers[index] === q.answer) {
+                    score += 5; // Total skor 100 (20 soal * 5 poin)
+                }
+            });
+
+            const endTime = new Date();
+            const timeTakenMs = endTime - quizStartTime;
+            const timeTakenSec = Math.floor(timeTakenMs / 1000);
+            const formattedTime = `${Math.floor(timeTakenSec / 60)}m ${timeTakenSec % 60}d`;
+
+            // Simpan Hasil ke Local Storage (untuk guru)
+            const newResult = {
+                Nama: studentName,
+                Skor: score,
+                "Waktu Selesai": formattedTime,
+                Tanggal: endTime.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+            };
+            const allResults = loadResults();
+            allResults.push(newResult);
+            localStorage.setItem(STORAGE_KEY_RESULTS, JSON.stringify(allResults));
+
+            // Simpan status pengguna (untuk pencegahan pengerjaan ulang)
+            saveQuizStatus('completed', studentName, score, formattedTime, newResult.Tanggal);
+
+            // Tampilkan Hasil
+            quizSection.style.display = 'none';
+            resultsSection.style.display = 'block';
+
+            document.getElementById('final-score').textContent = `Skor Anda: ${score} dari 100`;
+
+            // Pesan Motivasi
+            let motivation = "";
+            if (score >= 90) {
+                motivation = "Luar biasa! Pemahaman Anda sangat mendalam! 🎉";
+            } else if (score >= 70) {
+                motivation = "Kerja bagus! Terus tingkatkan kemampuanmu 💪";
+            } else {
+                motivation = "Tetap semangat! Coba pelajari lagi materinya 📖";
+            }
+            document.getElementById('motivation-message').textContent = motivation;
+
+            // Nonaktifkan semua tombol setelah selesai (redundansi)
+            nextBtn.disabled = true;
+            prevBtn.disabled = true;
+        }
+
+        /**
+         * Mengunduh hasil kuis yang tersimpan sebagai file CSV.
+         */
+        function downloadResults() {
+            const results = loadResults();
+            if (results.length === 0) {
+                alert("Tidak ada data hasil kuis untuk diunduh.");
+                return;
+            }
+
+            // Dapatkan header dari kunci objek pertama
+            const headers = Object.keys(results[0]);
+            
+            // Format data menjadi baris-baris CSV
+            const csvRows = [];
+            csvRows.push(headers.join(';')); // Header dipisahkan semicolon (umum di Indonesia)
+
+            for (const row of results) {
+                const values = headers.map(header => {
+                    const value = row[header];
+                    // Sanitasi nilai, terutama jika mengandung koma atau quote
+                    return `"${value.toString().replace(/"/g, '""')}"`;
+                });
+                csvRows.push(values.join(';'));
+            }
+
+            // Gabungkan baris dan buat Blob
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            
+            // Buat link download
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'hasil_kuis.csv';
+            
+            // Klik link secara otomatis
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- Event Listeners dan Inisialisasi ---
+
+        // Navigasi
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion(currentQuestionIndex);
+            }
+        });
+
+        // Validasi input nama
+        studentNameInput.addEventListener('input', () => {
+            startQuizBtn.disabled = studentNameInput.value.trim().length === 0;
+        });
+
+        // Mulai Kuis
+        startQuizBtn.addEventListener('click', startQuiz);
+
+        // Download Hasil
+        downloadResultsBtn.addEventListener('click', downloadResults);
+
+        /**
+         * Fungsi yang dijalankan saat halaman pertama kali dimuat.
+         */
+        function initializeQuiz() {
+            const status = checkQuizStatus();
+            const allResults = loadResults();
+
+            // Handle Mode Guru (tombol download)
+            if (allResults.length > 0) {
+                 downloadSection.style.display = 'block';
+                 document.getElementById('download-count').textContent = allResults.length;
+            }
+
+            if (status.status === 'completed') {
+                // Kuis sudah selesai
+                nameInputSection.style.display = 'none';
+                quizSection.style.display = 'none';
+                resultsSection.style.display = 'none';
+                completedMessageSection.style.display = 'block';
+
+                document.getElementById('info-score-completed').innerHTML = 
+                    `Anda terakhir menyelesaikan kuis pada ${status.date} dengan **Skor: ${status.score}** dalam waktu ${status.time}.`;
+            } else {
+                // Kuis belum selesai, tampilkan input nama
+                nameInputSection.style.display = 'block';
+                quizSection.style.display = 'none';
+                resultsSection.style.display = 'none';
+                completedMessageSection.style.display = 'none';
+            }
+        }
+
+        // Jalankan inisialisasi
+        initializeQuiz();
+    </script>
+</body>
+</html>
